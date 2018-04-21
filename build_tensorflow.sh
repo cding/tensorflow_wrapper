@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 set -e
 
 # configure environmental variables
@@ -23,40 +23,44 @@ export PYTHON_BIN_PATH=${PYTHON_BIN_PATH:-"$(which python3)"}
 export PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'import site; print(site.getsitepackages()[0])')"
 
 # configure cuda environmental variables
+
 if [ -e /opt/cuda ]; then
-  echo "Using CUDA from /opt/cuda"
-  export CUDA_TOOLKIT_PATH=/opt/cuda
+    echo "Using CUDA from /opt/cuda"
+    export CUDA_TOOLKIT_PATH=/opt/cuda
 elif [ -e /usr/local/cuda ]; then
-  echo "Using CUDA from /usr/local/cuda"
-  export CUDA_TOOLKIT_PATH=/usr/local/cuda
+    echo "Using CUDA from /usr/local/cuda"
+    export CUDA_TOOLKIT_PATH=/usr/local/cuda
 fi
 
 if [ -e /opt/cuda/include/cudnn.h ]; then
-  echo "Using CUDNN from /opt/cuda"
-  export CUDNN_INSTALL_PATH=/opt/cuda
+    echo "Using CUDNN from /opt/cuda"
+    export CUDNN_INSTALL_PATH=/opt/cuda
 elif [ -e /usr/local/cuda/include/cudnn.h ]; then
-  echo "Using CUDNN from /usr/local/cuda"
-  export CUDNN_INSTALL_PATH=/usr/local/cuda
+    echo "Using CUDNN from /usr/local/cuda"
+    export CUDNN_INSTALL_PATH=/usr/local/cuda
 elif [ -e /usr/include/cudnn.h ]; then
-  echo "Using CUDNN from /usr"
-  export CUDNN_INSTALL_PATH=/usr
+    echo "Using CUDNN from /usr"
+    export CUDNN_INSTALL_PATH=/usr
 fi
 
 if [ -n "${CUDA_TOOLKIT_PATH}" ]; then
-  if [[ -z "${CUDNN_INSTALL_PATH}" ]]; then
-    echo "CUDA found but no cudnn.h found. Please install cuDNN."
-    exit 1
-  fi
-  echo "CUDA support enabled"
-  cuda_config_opts="--config=opt --config=cuda"
-  export TF_NEED_CUDA=1
-  export TF_CUDA_COMPUTE_CAPABILITIES=${TF_CUDA_COMPUTE_CAPABILITIES:-"3.5,5.2,6.1,6.2"}
-  export TF_CUDA_VERSION="$($CUDA_TOOLKIT_PATH/bin/nvcc --version | sed -n 's/^.*release \(.*\),.*/\1/p')"
-  export TF_CUDNN_VERSION="$(sed -n 's/^#define CUDNN_MAJOR\s*\(.*\).*/\1/p' $CUDNN_INSTALL_PATH/include/cudnn.h)"
+    if [[ -z "${CUDNN_INSTALL_PATH}" ]]; then
+        echo "CUDA found but no cudnn.h found. Please install cuDNN."
+        exit 1
+    fi
+    echo "CUDA support enabled"
+    cuda_config_opts="--config=opt --config=cuda"
+    export TF_NEED_CUDA=1
+    export TF_CUDA_COMPUTE_CAPABILITIES=${TF_CUDA_COMPUTE_CAPABILITIES:-"3.5,5.2,6.1,6.2"}
+    export TF_CUDA_VERSION="$($CUDA_TOOLKIT_PATH/bin/nvcc --version | sed -n 's/^.*release \(.*\),.*/\1/p')"
+    export TF_CUDNN_VERSION="$(sed -n 's/^#define CUDNN_MAJOR\s*\(.*\).*/\1/p' $CUDNN_INSTALL_PATH/include/cudnn.h)"
+    export GCC_HOST_COMPILER_PATH=${GCC_HOST_COMPILER_PATH:-"/usr/bin/gcc"}
+    export CLANG_CUDA_COMPILER_PATH=${CLANG_CUDA_COMPILER_PATH:-"/usr/bin/clang"}
+    export TF_CUDA_CLANG=${TF_CUDA_CLANG:-0}
 else
-  echo "CUDA support disabled"
-  cuda_config_opts=""
-  export TF_NEED_CUDA=0
+    echo "CUDA support disabled"
+    cuda_config_opts=""
+    export TF_NEED_CUDA=0
 fi
 
 # configure and build
