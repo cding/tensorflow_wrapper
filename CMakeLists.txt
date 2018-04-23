@@ -17,7 +17,6 @@ ExternalProject_Add(
   UPDATE_COMMAND ""
   CONFIGURE_COMMAND make -f tensorflow/contrib/makefile/Makefile clean
   COMMAND tensorflow/contrib/makefile/download_dependencies.sh
-  COMMAND tensorflow/contrib/makefile/compile_linux_protobuf.sh
   COMMAND tensorflow/contrib/makefile/compile_nsync.sh
   COMMAND cp -r tensorflow/contrib/makefile/downloads/eigen
 	        tensorflow/contrib/makefile/gen/eigen3
