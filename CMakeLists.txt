@@ -43,12 +43,10 @@ target_include_directories(${PROJECT_NAME} INTERFACE
   ${CMAKE_CURRENT_BINARY_DIR}/tensorflow/bazel-genfiles
 )
 
-find_package(CUDA REQUIRED)
 set(TF_LIB_DIR ${CMAKE_CURRENT_BINARY_DIR}/tensorflow/bazel-bin/tensorflow)
 target_link_libraries(${PROJECT_NAME} INTERFACE
   ${TF_LIB_DIR}/libtensorflow_cc.so 
   ${TF_LIB_DIR}/libtensorflow_framework.so 
-  ${CUDA_LIBRARIES}
 )
 
 if(${${PROJECT_NAME}_build_examples})
@@ -73,7 +71,6 @@ target_include_directories(${PROJECT_NAME}_EXPORT INTERFACE
 target_link_libraries(${PROJECT_NAME}_EXPORT INTERFACE
   ${CMAKE_INSTALL_PREFIX}/${LIB_DEST}/libtensorflow_cc.so
   ${CMAKE_INSTALL_PREFIX}/${LIB_DEST}/libtensorflow_framework.so
-  ${CUDA_LIBRARIES}
 )
 
 # install all header files
