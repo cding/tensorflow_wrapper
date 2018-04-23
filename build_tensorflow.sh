@@ -1,71 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
-# configure environmental variables
-export CC_OPT_FLAGS=${CC_OPT_FLAGS:-"-march=haswell"}
-export TF_NEED_GCP=${TF_NEED_GCP:-0}
-export TF_NEED_HDFS=${TF_NEED_HDFS:-0}
-export TF_NEED_OPENCL=${TF_NEED_OPENCL:-0}
-export TF_NEED_OPENCL_SYCL=${TF_NEED_OPENCL_SYCL:-0}
-export TF_NEED_TENSORRT=${TF_NEED_TENSORRT:-0}
-export TF_NEED_JEMALLOC=${TF_NEED_JEMALLOC:-1}
-export TF_NEED_VERBS=${TF_NEED_VERBS:-0}
-export TF_NEED_MKL=${TF_NEED_MKL:-1}
-export TF_DOWNLOAD_MKL=${TF_DOWNLOAD_MKL:-1}
-export TF_NEED_MPI=${TF_NEED_MPI:-0}
-export TF_ENABLE_XLA=${TF_ENABLE_XLA:-1}
-export TF_NEED_S3=${TF_NEED_S3:-0}
-export TF_NEED_GDR=${TF_NEED_GDR:-0}
-export TF_CUDA_CLANG=${TF_CUDA_CLANG:-0}
-export TF_SET_ANDROID_WORKSPACE=${TF_SET_ANDROID_WORKSPACE:-0}
-export TF_NEED_KAFKA=${TF_NEED_KAFKA:-0}
-export PYTHON_BIN_PATH=${PYTHON_BIN_PATH:-"$(which python3)"}
-export PYTHON_LIB_PATH="$($PYTHON_BIN_PATH -c 'import site; print(site.getsitepackages()[0])')"
+# Configure the build for our CUDA configuration.
+export CI_BUILD_PYTHON=python
+export LD_LIBRARY_PATH=/usr/local/cuda/extras/CUPTI/lib64:$LD_LIBRARY_PATH
+export TF_NEED_CUDA=1
+export TF_CUDA_COMPUTE_CAPABILITIES=3.0,3.5,5.2,6.0,6.1
+export TF_CUDA_VERSION=$(nvcc --version | sed -n 's/^.*release \(.*\),.*/\1/p')
+export TF_CUDNN_VERSION=7
 
-# configure cuda environmental variables
-
-if [ -e /opt/cuda ]; then
-    echo "Using CUDA from /opt/cuda"
-    export CUDA_TOOLKIT_PATH=/opt/cuda
-elif [ -e /usr/local/cuda ]; then
-    echo "Using CUDA from /usr/local/cuda"
-    export CUDA_TOOLKIT_PATH=/usr/local/cuda
-fi
-
-if [ -e /opt/cuda/include/cudnn.h ]; then
-    echo "Using CUDNN from /opt/cuda"
-    export CUDNN_INSTALL_PATH=/opt/cuda
-elif [ -e /usr/local/cuda/include/cudnn.h ]; then
-    echo "Using CUDNN from /usr/local/cuda"
-    export CUDNN_INSTALL_PATH=/usr/local/cuda
-elif [ -e /usr/include/cudnn.h ]; then
-    echo "Using CUDNN from /usr"
-    export CUDNN_INSTALL_PATH=/usr
-fi
-
-if [ -n "${CUDA_TOOLKIT_PATH}" ]; then
-    if [[ -z "${CUDNN_INSTALL_PATH}" ]]; then
-        echo "CUDA found but no cudnn.h found. Please install cuDNN."
-        exit 1
-    fi
-    echo "CUDA support enabled"
-    cuda_config_opts="--config=opt --config=cuda"
-    export TF_NEED_CUDA=1
-    export TF_CUDA_COMPUTE_CAPABILITIES=${TF_CUDA_COMPUTE_CAPABILITIES:-"3.5,5.2,6.1,6.2"}
-    export TF_CUDA_VERSION="$($CUDA_TOOLKIT_PATH/bin/nvcc --version | sed -n 's/^.*release \(.*\),.*/\1/p')"
-    export TF_CUDNN_VERSION="$(sed -n 's/^#define CUDNN_MAJOR\s*\(.*\).*/\1/p' $CUDNN_INSTALL_PATH/include/cudnn.h)"
-    export GCC_HOST_COMPILER_PATH=${GCC_HOST_COMPILER_PATH:-"/usr/bin/gcc"}
-    export CLANG_CUDA_COMPILER_PATH=${CLANG_CUDA_COMPILER_PATH:-"/usr/bin/clang"}
-    export TF_CUDA_CLANG=${TF_CUDA_CLANG:-0}
-else
-    echo "CUDA support disabled"
-    cuda_config_opts=""
-    export TF_NEED_CUDA=0
-fi
+sudo ln -fs /usr/local/cuda/lib64/stubs/libcuda.so /usr/local/cuda/lib64/stubs/libcuda.so.1
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH}
 
 # configure and build
-./configure
-bazel build -c opt \
-            $cuda_config_opts \
+tensorflow/tools/ci_build/builds/configured GPU
+bazel build -c opt --config=cuda \
             --cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0" \
             tensorflow:libtensorflow_cc.so
+
+sudo rm /usr/local/cuda/lib64/stubs/libcuda.so.1
