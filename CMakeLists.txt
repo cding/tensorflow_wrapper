@@ -18,8 +18,6 @@ ExternalProject_Add(
   CONFIGURE_COMMAND make -f tensorflow/contrib/makefile/Makefile clean
   COMMAND tensorflow/contrib/makefile/download_dependencies.sh
   COMMAND tensorflow/contrib/makefile/compile_nsync.sh
-  COMMAND cp -r tensorflow/contrib/makefile/downloads/eigen
-	        tensorflow/contrib/makefile/gen/eigen3
   BUILD_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/build_tensorflow.sh
   INSTALL_COMMAND ""
 )
@@ -33,13 +31,14 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 find_package(Protobuf REQUIRED)
+find_package(Eigen3 REQURIED)
 
 # set the library include directories
 set(TF_DEP_DOWNLOADS tensorflow/tensorflow/contrib/makefile/downloads)
 set(TF_DEP_INSTALL tensorflow/tensorflow/contrib/makefile/gen)
 target_include_directories(${PROJECT_NAME} INTERFACE
-  ${CMAKE_CURRENT_BINARY_DIR}/${TF_DEP_INSTALL}/eigen3
   ${Protobuf_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIR}
   ${CMAKE_CURRENT_BINARY_DIR}/tensorflow
   ${CMAKE_CURRENT_BINARY_DIR}/tensorflow/bazel-genfiles
 )
@@ -49,6 +48,7 @@ target_link_libraries(${PROJECT_NAME} INTERFACE
   ${TF_LIB_DIR}/libtensorflow_cc.so 
   ${TF_LIB_DIR}/libtensorflow_framework.so
   ${Protobuf_LIBRARIES}
+  ${EIGEN3_LIBS}
 )
 
 if(${${PROJECT_NAME}_build_examples})
@@ -69,12 +69,14 @@ target_include_directories(${PROJECT_NAME}_EXPORT INTERFACE
   ${CMAKE_INSTALL_PREFIX}/${INCLUDE_DEST}/third_party/eigen3
   ${CMAKE_INSTALL_PREFIX}/${INCLUDE_DEST}/third_party
   ${Protobuf_INCLUDE_DIRS}
+  ${EIGEN3_INCLUDE_DIR}
   ${CMAKE_INSTALL_PREFIX}/${INCLUDE_DEST}
 )
 target_link_libraries(${PROJECT_NAME}_EXPORT INTERFACE
   ${CMAKE_INSTALL_PREFIX}/${LIB_DEST}/libtensorflow_cc.so
   ${CMAKE_INSTALL_PREFIX}/${LIB_DEST}/libtensorflow_framework.so
   ${Protobuf_LIBRARIES}
+  ${EIGEN3_LIBS}
 )
 
 # install all header files
