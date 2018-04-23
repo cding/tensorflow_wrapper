@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.3)
 project(tensorflow_wrapper)
 
 option(${PROJECT_NAME}_build_examples "Build ${PROJECT_NAME} examples." off)
@@ -33,12 +33,14 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
   INTERFACE_COMPILE_OPTIONS "-std=c++11;-D_GLIBCXX_USE_CXX11_ABI=0"
 )
 
+find_package(Protobuf REQUIRED)
+
 # set the library include directories
 set(TF_DEP_DOWNLOADS tensorflow/tensorflow/contrib/makefile/downloads)
 set(TF_DEP_INSTALL tensorflow/tensorflow/contrib/makefile/gen)
 target_include_directories(${PROJECT_NAME} INTERFACE
   ${CMAKE_CURRENT_BINARY_DIR}/${TF_DEP_INSTALL}/eigen3
-  ${CMAKE_CURRENT_BINARY_DIR}/${TF_DEP_INSTALL}/protobuf/include
+  ${Protobuf_INCLUDE_DIRS}
   ${CMAKE_CURRENT_BINARY_DIR}/tensorflow
   ${CMAKE_CURRENT_BINARY_DIR}/tensorflow/bazel-genfiles
 )
@@ -46,7 +48,8 @@ target_include_directories(${PROJECT_NAME} INTERFACE
 set(TF_LIB_DIR ${CMAKE_CURRENT_BINARY_DIR}/tensorflow/bazel-bin/tensorflow)
 target_link_libraries(${PROJECT_NAME} INTERFACE
   ${TF_LIB_DIR}/libtensorflow_cc.so 
-  ${TF_LIB_DIR}/libtensorflow_framework.so 
+  ${TF_LIB_DIR}/libtensorflow_framework.so
+  ${Protobuf_LIBRARIES}
 )
 
 if(${${PROJECT_NAME}_build_examples})
@@ -66,11 +69,13 @@ set_target_properties(${PROJECT_NAME}_EXPORT PROPERTIES
 target_include_directories(${PROJECT_NAME}_EXPORT INTERFACE
   ${CMAKE_INSTALL_PREFIX}/${INCLUDE_DEST}/third_party/eigen3
   ${CMAKE_INSTALL_PREFIX}/${INCLUDE_DEST}/third_party
+  ${Protobuf_INCLUDE_DIRS}
   ${CMAKE_INSTALL_PREFIX}/${INCLUDE_DEST}
 )
 target_link_libraries(${PROJECT_NAME}_EXPORT INTERFACE
   ${CMAKE_INSTALL_PREFIX}/${LIB_DEST}/libtensorflow_cc.so
   ${CMAKE_INSTALL_PREFIX}/${LIB_DEST}/libtensorflow_framework.so
+  ${Protobuf_LIBRARIES}
 )
 
 # install all header files
