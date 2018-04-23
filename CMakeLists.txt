@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 project(tensorflow_wrapper)
 
-option(${PROJECT_NAME}_build_examples "Build ${PROJECT_NAME} examples." on)
+option(${PROJECT_NAME}_build_examples "Build ${PROJECT_NAME} examples." off)
 
 include(ExternalProject)
 set(TENSORFLOW_TAG "r1.8")
