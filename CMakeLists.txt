@@ -31,7 +31,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 find_package(Protobuf REQUIRED)
-find_package(Eigen3 REQURIED)
+find_package(Eigen3 REQUIRED)
 
 # set the library include directories
 set(TF_DEP_DOWNLOADS tensorflow/tensorflow/contrib/makefile/downloads)
