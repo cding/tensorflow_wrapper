@@ -116,29 +116,6 @@ install(
                  PATTERN "*.tar.*"    EXCLUDE
                  PATTERN "*.zip"      EXCLUDE
 )
-install(
-  DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${TF_DEP_INSTALL}/protobuf/include/google
-  DESTINATION ${INCLUDE_DEST}/third_party
-  FILES_MATCHING PATTERN "*.h"
-)
-# (Note that we cannot simply include all *.h or *.hpp files, since e.g., eigen
-# does not use file extensions for header files.)
-install(
-  DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${TF_DEP_INSTALL}/eigen3
-  DESTINATION ${INCLUDE_DEST}/third_party
-  FILES_MATCHING PATTERN "*"
-                 PATTERN "Makefile*"  EXCLUDE
-                 PATTERN "*unittest*" EXCLUDE
-                 PATTERN "*.o"        EXCLUDE
-                 PATTERN "*.so"       EXCLUDE
-                 PATTERN "*.so.*"     EXCLUDE
-                 PATTERN "*.a"        EXCLUDE
-                 PATTERN "*.tbz"      EXCLUDE
-                 PATTERN "*.tgz"      EXCLUDE
-                 PATTERN "*.tar"      EXCLUDE
-                 PATTERN "*.tar.*"    EXCLUDE
-                 PATTERN "*.zip"      EXCLUDE
-)
 
 install(FILES
   ${TF_LIB_DIR}/libtensorflow_cc.so
