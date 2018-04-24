@@ -15,5 +15,4 @@ export LD_LIBRARY_PATH=/usr/local/cuda/lib64/stubs:${LD_LIBRARY_PATH}
 # configure and build
 tensorflow/tools/ci_build/builds/configured GPU
 bazel build -c opt --config=cuda \
-            --cxxopt="-D_GLIBCXX_USE_CXX11_ABI=0" \
             tensorflow:libtensorflow_cc.so
