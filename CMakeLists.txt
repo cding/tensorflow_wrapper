@@ -62,7 +62,7 @@ set(EXPORT_DEST "lib/${PROJECT_NAME}")
 
 add_library(${PROJECT_NAME}_EXPORT INTERFACE)
 set_target_properties(${PROJECT_NAME}_EXPORT PROPERTIES
-  INTERFACE_COMPILE_OPTIONS "-std=c++11;-D_GLIBCXX_USE_CXX11_ABI=0"
+  INTERFACE_COMPILE_OPTIONS "-std=c++11"
   EXPORT_NAME ${PROJECT_NAME}
 )
 target_include_directories(${PROJECT_NAME}_EXPORT INTERFACE
@@ -103,6 +103,24 @@ install(
 install(
   DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tensorflow/third_party
   DESTINATION ${INCLUDE_DEST}
+  FILES_MATCHING PATTERN "*"
+                 PATTERN "Makefile*"  EXCLUDE
+                 PATTERN "*unittest*" EXCLUDE
+                 PATTERN "*.o"        EXCLUDE
+                 PATTERN "*.so"       EXCLUDE
+                 PATTERN "*.so.*"     EXCLUDE
+                 PATTERN "*.a"        EXCLUDE
+                 PATTERN "*.tbz"      EXCLUDE
+                 PATTERN "*.tgz"      EXCLUDE
+                 PATTERN "*.tar"      EXCLUDE
+                 PATTERN "*.tar.*"    EXCLUDE
+                 PATTERN "*.zip"      EXCLUDE
+)
+# (Note that we cannot simply include all *.h or *.hpp files, since e.g., eigen
+# does not use file extensions for header files.)
+install(
+  DIRECTORY ${EIGEN3_INCLUDE_DIR}
+  DESTINATION ${INCLUDE_DEST}/third_party
   FILES_MATCHING PATTERN "*"
                  PATTERN "Makefile*"  EXCLUDE
                  PATTERN "*unittest*" EXCLUDE
