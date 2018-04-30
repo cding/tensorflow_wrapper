@@ -4,7 +4,7 @@ project(tensorflow_wrapper)
 option(${PROJECT_NAME}_build_examples "Build ${PROJECT_NAME} examples." off)
 
 include(ExternalProject)
-set(TENSORFLOW_TAG "v1.7.0")
+set(TENSORFLOW_TAG "v1.8.0")
 ExternalProject_Add(
   tensorflow
   GIT_REPOSITORY http://github.com/tensorflow/tensorflow.git
