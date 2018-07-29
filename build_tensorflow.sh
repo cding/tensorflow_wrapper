@@ -44,6 +44,5 @@ fi
 # configure and build
 bazel build -c opt $config_opts \
             tensorflow:libtensorflow_cc.so \
-            tensorflow/python/tools:freeze_graph \
             tensorflow/tools/graph_transforms:transform_graph \
             tensorflow/tools/graph_transforms:summarize_graph
