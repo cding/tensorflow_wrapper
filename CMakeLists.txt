@@ -59,6 +59,7 @@ endif()
 set(INCLUDE_DEST "include/${PROJECT_NAME}")
 set(LIB_DEST "lib")
 set(EXPORT_DEST "lib/${PROJECT_NAME}")
+set(BIN_DEST "bin")
 
 add_library(${PROJECT_NAME}_EXPORT INTERFACE)
 set_target_properties(${PROJECT_NAME}_EXPORT PROPERTIES
@@ -135,11 +136,20 @@ install(
                  PATTERN "*.zip"      EXCLUDE
 )
 
+# Install shared library files.
 install(FILES
   ${TF_LIB_DIR}/libtensorflow_cc.so
   ${TF_LIB_DIR}/libtensorflow_framework.so
   DESTINATION ${LIB_DEST}
 )
+
+# Install tools. 
+install(PROGRAMS
+  ${TF_LIB_DIR}/tools/graph_transforms/summarize_graph
+  ${TF_LIB_DIR}/tools/graph_transforms/transform_graph
+  DESTINATION ${BIN_DEST}
+)
+
 install(TARGETS ${PROJECT_NAME}_EXPORT EXPORT ${PROJECT_NAME} DESTINATION ${LIB_DEST})
 install(FILES ${PROJECT_NAME}-config.cmake DESTINATION ${EXPORT_DEST})
 install(EXPORT ${PROJECT_NAME} DESTINATION ${EXPORT_DEST})
