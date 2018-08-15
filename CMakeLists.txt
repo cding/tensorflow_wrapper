@@ -119,22 +119,22 @@ install(
 )
 # (Note that we cannot simply include all *.h or *.hpp files, since e.g., eigen
 # does not use file extensions for header files.)
-install(
-  DIRECTORY ${EIGEN3_INCLUDE_DIR}
-  DESTINATION ${INCLUDE_DEST}/third_party
-  FILES_MATCHING PATTERN "*"
-                 PATTERN "Makefile*"  EXCLUDE
-                 PATTERN "*unittest*" EXCLUDE
-                 PATTERN "*.o"        EXCLUDE
-                 PATTERN "*.so"       EXCLUDE
-                 PATTERN "*.so.*"     EXCLUDE
-                 PATTERN "*.a"        EXCLUDE
-                 PATTERN "*.tbz"      EXCLUDE
-                 PATTERN "*.tgz"      EXCLUDE
-                 PATTERN "*.tar"      EXCLUDE
-                 PATTERN "*.tar.*"    EXCLUDE
-                 PATTERN "*.zip"      EXCLUDE
-)
+#install(
+#  DIRECTORY ${EIGEN3_INCLUDE_DIR}
+#  DESTINATION ${INCLUDE_DEST}/third_party
+#  FILES_MATCHING PATTERN "*"
+#                 PATTERN "Makefile*"  EXCLUDE
+#                 PATTERN "*unittest*" EXCLUDE
+#                 PATTERN "*.o"        EXCLUDE
+#                 PATTERN "*.so"       EXCLUDE
+#                 PATTERN "*.so.*"     EXCLUDE
+#                 PATTERN "*.a"        EXCLUDE
+#                 PATTERN "*.tbz"      EXCLUDE
+#                 PATTERN "*.tgz"      EXCLUDE
+#                 PATTERN "*.tar"      EXCLUDE
+#                 PATTERN "*.tar.*"    EXCLUDE
+#                 PATTERN "*.zip"      EXCLUDE
+#)
 
 # Install shared library files.
 install(FILES
