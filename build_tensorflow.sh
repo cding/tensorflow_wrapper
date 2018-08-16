@@ -34,7 +34,7 @@ if [ -n "${CUDA_PATH}" ]; then
 
     sudo ln -fs ${CUDA_PATH}/lib64/stubs/libcuda.so ${CUDA_PATH}/lib64/stubs/libcuda.so.1
     export LD_LIBRARY_PATH=${CUDA_PATH}/lib64/stubs:${LD_LIBRARY_PATH}
-    tensorflow/tools/ci_build/builds/configured GPU
+    ./configure
 else
     echo "CUDA support disabled"
     config_opts=""
