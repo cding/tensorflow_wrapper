@@ -5,7 +5,7 @@ option(${PROJECT_NAME}_build_examples "Build ${PROJECT_NAME} examples." off)
 
 include(ExternalProject)
 if(NOT TENSORFLOW_TAG)
-  set(TENSORFLOW_TAG "v1.10.0")
+  set(TENSORFLOW_TAG "v1.8.0")
 endif()
 ExternalProject_Add(
   tensorflow
@@ -121,22 +121,22 @@ install(
 )
 # (Note that we cannot simply include all *.h or *.hpp files, since e.g., eigen
 # does not use file extensions for header files.)
-#install(
-#  DIRECTORY ${EIGEN3_INCLUDE_DIR}
-#  DESTINATION ${INCLUDE_DEST}/third_party
-#  FILES_MATCHING PATTERN "*"
-#                 PATTERN "Makefile*"  EXCLUDE
-#                 PATTERN "*unittest*" EXCLUDE
-#                 PATTERN "*.o"        EXCLUDE
-#                 PATTERN "*.so"       EXCLUDE
-#                 PATTERN "*.so.*"     EXCLUDE
-#                 PATTERN "*.a"        EXCLUDE
-#                 PATTERN "*.tbz"      EXCLUDE
-#                 PATTERN "*.tgz"      EXCLUDE
-#                 PATTERN "*.tar"      EXCLUDE
-#                 PATTERN "*.tar.*"    EXCLUDE
-#                 PATTERN "*.zip"      EXCLUDE
-#)
+install(
+  DIRECTORY ${EIGEN3_INCLUDE_DIR}
+  DESTINATION ${INCLUDE_DEST}/third_party
+  FILES_MATCHING PATTERN "*"
+                 PATTERN "Makefile*"  EXCLUDE
+                 PATTERN "*unittest*" EXCLUDE
+                 PATTERN "*.o"        EXCLUDE
+                 PATTERN "*.so"       EXCLUDE
+                 PATTERN "*.so.*"     EXCLUDE
+                 PATTERN "*.a"        EXCLUDE
+                 PATTERN "*.tbz"      EXCLUDE
+                 PATTERN "*.tgz"      EXCLUDE
+                 PATTERN "*.tar"      EXCLUDE
+                 PATTERN "*.tar.*"    EXCLUDE
+                 PATTERN "*.zip"      EXCLUDE
+)
 
 # Install shared library files.
 install(FILES
