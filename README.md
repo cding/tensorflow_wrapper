@@ -63,3 +63,6 @@ RUN apt-get update && apt-get install -y cmake python \
 	&& make \
 	&& make install
 ```
+
+## TX2
+- [Reference](https://github.com/JasonAtNvidia/JetsonTFBuild)

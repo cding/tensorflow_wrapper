@@ -1,0 +1,20 @@
+diff --git a/tensorflow/contrib/lite/kernels/internal/BUILD b/tensorflow/contrib/lite/kernels/internal/BUILD
+index a97db6c..b18a653 100644
+--- a/tensorflow/contrib/lite/kernels/internal/BUILD
++++ b/tensorflow/contrib/lite/kernels/internal/BUILD
+@@ -21,15 +21,12 @@ HARD_FP_FLAGS_IF_APPLICABLE = select({
+ NEON_FLAGS_IF_APPLICABLE = select({
+     ":arm": [
+         "-O3",
+-        "-mfpu=neon",
+     ],
+     ":armeabi-v7a": [
+         "-O3",
+-        "-mfpu=neon",
+     ],
+     ":armv7a": [
+         "-O3",
+-        "-mfpu=neon",
+     ],
+     "//conditions:default": [
+         "-O3",
