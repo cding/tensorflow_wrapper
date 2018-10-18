@@ -8,31 +8,25 @@ Some notes for packaging tensorflow into a custom Dockerfile.
 ## Prerequisites
 
 ### Bazel
-**Note:** Running Bazel inside a `docker build` command causes [trouble](https://github.com/bazelbuild/bazel/issues/134). The easiest solution is to set up a bazelrc file forcing --batch:
-```Dockerfile
-RUN echo "startup --batch" >>/etc/bazel.bazelrc
-```
-
-Similarly, we need to workaround sandboxing [issues](https://github.com/bazelbuild/bazel/issues/418):
+We need to workaround sandboxing [issues](https://github.com/bazelbuild/bazel/issues/418):
 ```Dockerfile
 RUN echo "build --spawn_strategy=standalone --genrule_strategy=standalone" >>/etc/bazel.bazelrc
 ```
 
-Install Bazel:
+Install [Bazel](https://docs.bazel.build/versions/master/install-ubuntu.html):
 ```Dockerfile
-RUN mkdir /opt/bazel \
-	&& cd /opt/bazel \
-	&& wget https://github.com/bazelbuild/bazel/releases/download/0.12.0/bazel-0.12.0-without-jdk-installer-linux-x86_64.sh \
-	&& chmod +x bazel-*.sh \
-	&& ./bazel-0.12.0-without-jdk-installer-linux-x86_64.sh \
-	&& cd / \
-	&& rm -f /opt/bazel/bazel-0.12.0-without-jdk-installer-linux-x86_64.sh
+RUN apt-get install -y --no-install-recommends curl openjdk-8-jdk \
+	&& echo "deb [arch=amd64] http://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list \
+	&& curl https://bazel.build/bazel-release.pub.gpg | apt-key add - \
+	&& apt-get update && apt-get install -y bazel
 ```
+*Note* It seems there are a set of [warnings](https://github.com/bazelbuild/bazel/issues/5599).
 
 ### Protobuf
-Install protobuf 3.6.1 (required by tensorflow)
+Install [protobuf 3.6.1](https://github.com/protocolbuffers/protobuf/blob/master/src/README.md) (required by tensorflow).
 ```Dockerfile
-RUN cd /opt && git clone https://github.com/google/protobuf.git \
+RUN apt-get update && apt-get install -y --no-install-recommends autoconf automake libtool curl make g++ unzip
+	cd /opt && git clone https://github.com/google/protobuf.git \
 	&& cd protobuf \
 	&& git checkout tags/v3.6.1 \
 	&& git submodule update --init --recursive \
@@ -48,7 +42,7 @@ RUN cd /opt && git clone https://github.com/google/protobuf.git \
 Install Eigen 3
 ```Dockerfile
 RUN cd /opt && wget http://bitbucket.org/eigen/eigen/get/3.3.5.tar.gz \
-	&& tar -xzvf 3.3.5.tar.gz \
+	&& tar -xzf 3.3.5.tar.gz \
 	&& cd eigen-eigen-b3f3d4950030 \
 	&& mkdir build \
 	&& cd build \
@@ -57,4 +51,15 @@ RUN cd /opt && wget http://bitbucket.org/eigen/eigen/get/3.3.5.tar.gz \
 	&& make install \
 	&& rm -rf /opt/3.3.5.tar.gz \
 	&& rm -rf /eigen-eigen-b3f3d4950030
+```
+
+### Tensorflow
+```Dockerfile
+RUN apt-get update && apt-get install -y cmake python \
+	&& cd /opt && git clone https://github.com/compwizk/tensorflow_wrapper && \
+	&& mkdir -p /opt/tensorflow_wrapper/build
+	&& cd /opt/tensorflow_wrapper/build
+	&& cmake .. \
+	&& make \
+	&& make install
 ```
