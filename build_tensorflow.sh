@@ -45,16 +45,6 @@ if [ "$(uname -m)" = "x86_64" ]; then
 # This should probably be a bit mroe specific since deviceQuery is compiled against TX2
 elif [ "$(uname -m)" = "aarch64" ]; then
 
-    # Get at the deviceQuery sample code to extract useful information 
-    # about the Jetson GPU and compute capability
-    compute_capability=$(echo ./deviceQuery | \
-                         grep -oP "(?<=CUDA Capability Major/Minor version number:)\s*(\d+)\.(\d*)" |
-                         awk '$1=$1')
-
-    cuda_drive_version=$(echo ./deviceQuery | \
-                         grep -oP "(?<=CUDA Driver Version =)\s*(\d+)\.(\d*)" | \
-                         awk '$1=$1')
-
     export PYTHON_BIN_PATH=$(which $PYTHON)
     export USE_DEFAULT_PYTHON_LIB_PATH=1
     export TF_NEED_JEMALLOC=1
@@ -69,14 +59,14 @@ elif [ "$(uname -m)" = "aarch64" ]; then
     export TF_NEED_OPENCL=0
     export TF_NEED_OPENCL_SYCL=0
     export TF_NEED_CUDA=1
-    export TF_CUDA_VERSION="$cuda_drive_version"
+    export TF_CUDA_VERSION="9.0"
     export CUDA_TOOLKIT_PATH="$(dirname $(dirname $(which nvcc)))"
-    export CUDNN_INSTALL_PATH=$(dirname "$(locate libcudnn.so | tail -n 1)")
+    export CUDNN_INSTALL_PATH="/usr/lib/aarch64-linux-gnu"
     export TF_CUDNN_VERSION="$(ls -l $CUDNN_INSTALL_PATH | grep -oP '(?<=libcudnn.so.)\s*(\d+)\.(\d*)\.(\d*)\s*' | head -n 1)"
     export TF_NEED_TENSORRT=1
     export TENSORRT_INSTALL_PATH="$CUDNN_INSTALL_PATH"
     export TF_NCCL_VERSION=1.3
-    export TF_CUDA_COMPUTE_CAPABILITIES="5.3,$compute_capability"
+    export TF_CUDA_COMPUTE_CAPABILITIES="5.3,6.2"
     export TF_CUDA_CLANG=0
     export GCC_HOST_COMPILER_PATH="$(which gcc)"
     export TF_NEED_MPI=0
@@ -84,11 +74,9 @@ elif [ "$(uname -m)" = "aarch64" ]; then
     export TF_SET_ANDROID_WORKSPACE=0
     export TF_NEED_NGRAPH=0
 
-    bash ./tensorflow/configure
-    cd tensorflow
-    git apply ../jetson.patch
-    cd ..
-    config_opts="-c cuda"
+    bash ./configure
+    git apply -p1 ../jetson.patch
+    config_opts="--config=cuda"
 
 else
     echo "Unsupported architecture detected: $(uname -m)"

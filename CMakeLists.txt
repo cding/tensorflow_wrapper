@@ -7,6 +7,12 @@ include(ExternalProject)
 if(NOT TENSORFLOW_TAG)
     set(TENSORFLOW_TAG "v1.11.0")
 endif()
+
+# Copy build execution files
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/build_tensorflow.sh ${CMAKE_CURRENT_BINARY_DIR}/build_tensorflow.sh COPYONLY)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/jetson.patch ${CMAKE_CURRENT_BINARY_DIR}/jetson.patch COPYONLY)
+
+
 ExternalProject_Add(
     tensorflow
     GIT_REPOSITORY http://github.com/tensorflow/tensorflow.git
@@ -20,7 +26,7 @@ ExternalProject_Add(
     CONFIGURE_COMMAND make -f tensorflow/contrib/makefile/Makefile clean
     COMMAND tensorflow/contrib/makefile/download_dependencies.sh
     COMMAND tensorflow/contrib/makefile/compile_nsync.sh
-    BUILD_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/build_tensorflow.sh
+    BUILD_COMMAND ${CMAKE_CURRENT_BINARY_DIR}/build_tensorflow.sh
     INSTALL_COMMAND ""
 )
 
