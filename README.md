@@ -22,27 +22,28 @@ RUN mkdir -p /opt/bazel && cd /opt/bazel && \
 ```
 
 ### Protobuf
-Install [protobuf 3.6.1](https://github.com/protocolbuffers/protobuf/blob/master/src/README.md) (required by tensorflow).
+Install [protobuf 3.6.0](https://github.com/protocolbuffers/protobuf/blob/master/src/README.md) (required by tensorflow).
 ```Dockerfile
 RUN cd /opt && \
-	wget --quiet https://github.com/protocolbuffers/protobuf/releases/download/v3.6.1/protobuf-all-3.6.1.tar.gz && \
-	tar -zxf protobuf-all-3.6.1.tar.gz && rm protobuf-all-3.6.1.tar.gz && \
-	cd protobuf-3.6.1 && \
+	wget --quiet https://github.com/protocolbuffers/protobuf/releases/download/v3.6.0/protobuf-all-3.6.0.tar.gz && \
+	tar -zxf protobuf-all-3.6.0.tar.gz && rm protobuf-all-3.6.0.tar.gz && \
+	cd protobuf-3.6.0 && \
 	./autogen.sh && ./configure && \
 	make && make install && ldconfig && \
-	rm -rf /opt/protobuf-3.6.1
+	rm -rf /opt/protobuf-3.6.0
 ```
 
 ### Eigen
 Install Eigen 3
 ```Dockerfile
 RUN cd /opt && \
-	wget --quiet http://bitbucket.org/eigen/eigen/get/3.3.5.tar.gz && \
-	tar -zxf 3.3.5.tar.gz && rm /opt/3.3.5.tar.gz && \
-	mkdir -p /opt/eigen-eigen-b3f3d4950030/build && cd /opt/eigen-eigen-b3f3d4950030/build && \
+	wget --quiet https://bitbucket.org/eigen/eigen/get/fd6845384b86.tar.gz && \
+	tar -zxf fd6845384b86.tar.gz && rm /opt/fd6845384b86.tar.gz && \
+	mkdir -p /opt/eigen-eigen-fd6845384b86/build && cd /opt/eigen-eigen-fd6845384b86/build && \
 	cmake .. && \
 	make && make install && \
-	rm -rf /opt/eigen-eigen-b3f3d4950030
+	rm -rf /opt/eigen-eigen-fd6845384b86 && \
+	ln -s /usr/local/include/eigen3 /usr/include/eigen3
 ```
 
 ### GCC-6
@@ -55,8 +56,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends software-proper
 
 ### Tensorflow
 ```Dockerfile
-COPY tensorflow_wrapper /opt/tensorflow_wrapper
-RUN mkdir -p /opt/tensorflow_wrapper/build && \
+RUN cd /opt && \
+	git clone https://github.com/cding/tensorflow_wrapper.git && \
+	mkdir -p /opt/tensorflow_wrapper/build && \
 	cd /opt/tensorflow_wrapper/build && \
 	cmake .. && make && make install
 ```
