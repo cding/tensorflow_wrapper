@@ -28,6 +28,7 @@ if [ "$(uname -m)" = "x86_64" ]; then
 
         # Configure the build for our CUDA configuration.
         export LD_LIBRARY_PATH=${CUDA_PATH}/extras/CUPTI/lib64:$LD_LIBRARY_PATH
+        export TF_NCCL_VERSION=1.3
         export TF_NEED_CUDA=1
         export TF_CUDA_COMPUTE_CAPABILITIES=3.0,3.5,5.2,6.0,6.1
         export TF_CUDA_VERSION=$(nvcc --version | sed -n 's/^.*release \(.*\),.*/\1/p')
