@@ -76,7 +76,7 @@ elif [ "$(uname -m)" = "aarch64" ]; then
     export TF_NEED_NGRAPH=0
 
     bash ./configure
-    git apply -p1 ../jetson.patch
+    git apply --ignore-space-change --ignore-whitespace -p1 ../jetson.patch
     config_opts="--config=cuda"
 
 else
