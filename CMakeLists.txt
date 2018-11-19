@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(tensorflow_wrapper)
 
-option(${PROJECT_NAME}_build_examples "Build ${PROJECT_NAME} examples." off)
-
 include(ExternalProject)
 if(NOT TENSORFLOW_TAG)
     set(TENSORFLOW_TAG "v1.11.0")
@@ -124,6 +122,11 @@ install(
                                  PATTERN "*.tar"      EXCLUDE
                                  PATTERN "*.tar.*"    EXCLUDE
                                  PATTERN "*.zip"      EXCLUDE
+)
+install(
+    DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/tensorflow/tensorflow/contrib/makefile/downloads/absl/absl
+    DESTINATION ${INCLUDE_DEST}
+    FILES_MATCHING PATTERN "*.h"
 )
 # (Note that we cannot simply include all *.h or *.hpp files, since e.g., eigen
 # does not use file extensions for header files.)
