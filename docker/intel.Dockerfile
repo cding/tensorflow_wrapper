@@ -1,5 +1,7 @@
 FROM ubuntu:16.04
 
+MAINTAINER compwizk, cding
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
 	apt-transport-https ca-certificates curl wget make cmake unzip git \
 	autoconf automake libtool g++ \
@@ -40,8 +42,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends openjdk-8-jdk &
 	cd /opt/bazel && bash ./compile.sh && mv ./output/bazel /usr/local/bin && rm -rf /opt/bazel
 
 # Install Tensorflow
-RUN cd /opt && \
-	git clone https://github.com/cding/tensorflow_wrapper.git && \
+RUN cd /opt && git clone https://github.com/cding/tensorflow_wrapper.git && \
 	mkdir -p /opt/tensorflow_wrapper/build && \
 	cd /opt/tensorflow_wrapper/build && \
 	cmake .. && make && make install && \

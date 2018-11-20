@@ -1,6 +1,6 @@
 # Tensorflow Installation Wrapper
 
-A small project using CMake to build tensorflow C++ from source (Google's github tagged releases) on x86_64 and aarch64 (specifically arm64v8).
+A small project using CMake to build tensorflow C++ from source (Google's github tagged releases) on x86_64 and aarch64 (specifically arm64v8) with GPU support.
 
 # Build Requirements
 You can easily package these components into a Dockerfile if you want to go that route.
