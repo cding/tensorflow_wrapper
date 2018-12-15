@@ -60,7 +60,15 @@ elif [ "$(uname -m)" = "aarch64" ]; then
     export TF_NEED_OPENCL=0
     export TF_NEED_OPENCL_SYCL=0
     export TF_NEED_CUDA=1
-    export TF_CUDA_VERSION="9.0"
+
+    # This is VERY specific to TX2's JP 3.3 installation
+    # Opted for this check to support the Xavier's 108+ by default
+    if [ "$(uname -r)" = "4.4.38-tegra" ]; then
+        export TF_CUDA_VERSION="9.0"
+    else
+        export TF_CUDA_VERSION="10.0"
+    fi
+    
     export CUDA_TOOLKIT_PATH="$(dirname $(dirname $(which nvcc)))"
     export CUDNN_INSTALL_PATH="/usr/lib/aarch64-linux-gnu"
     export TF_CUDNN_VERSION="$(ls -l $CUDNN_INSTALL_PATH | grep -oP '(?<=libcudnn.so.)\s*(\d+)\.(\d*)\.(\d*)\s*' | head -n 1)"
@@ -74,6 +82,7 @@ elif [ "$(uname -m)" = "aarch64" ]; then
     export CC_OPT_FLAGS="-march=native"
     export TF_SET_ANDROID_WORKSPACE=0
     export TF_NEED_NGRAPH=0
+    export TF_NEED_ROCM=0
 
     bash ./configure
     git apply -p1 ../jetson.patch

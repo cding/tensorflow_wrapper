@@ -3,7 +3,7 @@ project(tensorflow_wrapper)
 
 include(ExternalProject)
 if(NOT TENSORFLOW_TAG)
-    set(TENSORFLOW_TAG "v1.11.0")
+    set(TENSORFLOW_TAG "v1.12.0")
 endif()
 
 # Copy build execution files
