@@ -6,7 +6,7 @@ A small project using CMake to build tensorflow C++ from source (Google's github
 You can easily package these components into a Dockerfile if you want to go that route.
 
 >>>
-If you are using a TX2, just be sure to package your nvidia, cuda, and cudnn drivers/libs into the image as well. Also, in the `utils` folder there is a script that creates the scratch space necessary to build tensorflow on the TX2 target. The script contains the repo link if you want more information on how that works.
+If you are using a TX2 or Xavier, just be sure to package your nvidia, cuda, and cudnn drivers/libs into the image as well. Also, in the `utils` folder there is a script that creates the scratch space necessary to build tensorflow on the TX2/Xavier target. The script contains the repo link if you want more information on how that works.
 >>>
 
 ## Prerequisites
@@ -64,5 +64,5 @@ RUN cd /opt && \
 ```
 
 >>>
-On TX2, Make sure your `/usr/lib/aarch64-linux-gnu/libcuda.so.1` exists and is linked to `/usr/lib/aarch64-linux-gnu/libcuda.so` otherwise the build will fail.
+On TX2 and Xavier, Make sure your `/usr/lib/aarch64-linux-gnu/libcuda.so.1` exists and is linked to `/usr/lib/aarch64-linux-gnu/libcuda.so` otherwise the build will fail.
 >>>
