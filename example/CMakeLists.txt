@@ -9,4 +9,4 @@ if (NOT CUDA_FOUND)
 endif(NOT CUDA_FOUND)
 
 add_executable(example example.cpp)
-target_link_libraries(example tensorflow_wrapper ${tensorflow_wrapper_LIBRARIES} ${CUDA_LIBRARIES})
+target_link_libraries(example tensorflow_wrapper ${CUDA_LIBRARIES})
