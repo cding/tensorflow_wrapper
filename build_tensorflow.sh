@@ -23,6 +23,7 @@ export TF_CUDA_CLANG=0
 export GCC_HOST_COMPILER_PATH="$(which gcc)"
 export TF_NEED_MPI=0
 export CC_OPT_FLAGS="-march=native"
+export BUILD_PY_WHEEL=0
 
 if [ "$(uname -m)" = "x86_64" ]; then
     # Check if CUDA is installed.
